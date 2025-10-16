@@ -1,0 +1,41 @@
+class Solution {
+    public int maxSubArray(int[] nums) {
+        return maxSubArrayHelper(nums, 0, nums.length - 1);
+    }
+
+    private int maxSubArrayHelper(int[] nums, int low, int high) {
+        if (low == high) {
+            return nums[low];
+        }
+
+        int mid = (low + high) / 2;
+
+        int leftSum = maxSubArrayHelper(nums, low, mid);
+        int rightSum = maxSubArrayHelper(nums, mid + 1, high);
+        int crossSum = maxCrossingSubarray(nums, low, mid, high);
+
+        return Math.max(Math.max(leftSum, rightSum), crossSum);
+    }
+
+    private int maxCrossingSubarray(int[] nums, int low, int mid, int high) {
+        int leftSum = Integer.MIN_VALUE;
+        int sum = 0;
+        for (int i = mid; i >= low; i--) {
+            sum += nums[i];
+            if (sum > leftSum) {
+                leftSum = sum;
+            }
+        }
+
+        int rightSum = Integer.MIN_VALUE;
+        sum = 0;
+        for (int j = mid + 1; j <= high; j++) {
+            sum += nums[j];
+            if (sum > rightSum) {
+                rightSum = sum;
+            }
+        }
+
+        return leftSum + rightSum;
+    }
+}
